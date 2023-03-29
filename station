@@ -1,0 +1,45 @@
+#!/bin/bash
+
+# Global Variables
+
+# Fuctions
+
+close() {
+    # Logs the user out; locks the user's password; disabled autologin; enables banner message; reboots
+    USER=$1
+
+    loginctl terminate-user $USER &&
+    usermod -L $USER && 
+    sed --in-place=.bak 's/^AutomaticLoginEnable = true/AutomaticLoginEnable = false/g' /etc/gdm3/custom.conf &&
+    sed --in-place=.bak 's/^banner-message-enable=false/banner-message-enable=true/g' /etc/gdm3/greeter.dconf-defaults &&
+    systemctl reboot
+    return 0
+}
+
+open() {
+    # Unlocks the users password; enables autologin; disables banner message; reboots
+    USER=$1
+
+    usermod -U $USER &&
+    sed --in-place=.bak 's/^AutomaticLoginEnable = false/AutomaticLoginEnable = true/g' /etc/gdm3/custom.conf &&
+    sed --in-place=.bak 's/^banner-message-enable=true/banner-message-enable=false/g' /etc/gdm3/greeter.dconf-defaults &&
+    systemctl reboot
+    return 0
+}
+#Determine which function the user passed in to the command
+
+case "$1" in
+"") ;;
+close)
+    "$@"
+    exit
+    ;;
+open)
+    "$@"
+    exit
+    ;;
+*)
+    echo "Unknown function: $1"
+    exit 2
+    ;;
+esac
