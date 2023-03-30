@@ -1,0 +1,11 @@
+[Unit]
+Description= Run station close for %i
+
+[Timer]
+OnCalendar=Mon..Thu 17:45
+OnCalendar=Fri..Sat 16:45
+Persistent=true
+AccuracySec=1s
+
+[Install]
+WantedBy=timers.target

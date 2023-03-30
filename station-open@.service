@@ -1,0 +1,9 @@
+[Unit]
+Description=Open computer station for %i
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/bash /usr/local/sbin/station open %i
+
+[Install]
+WantedBy=multi-user.target
