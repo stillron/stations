@@ -1,5 +1,6 @@
 [Unit]
 Description= Run station open for %i
+After=gdm.service
 
 [Timer]
 OnCalendar=Mon..Thu 17:45

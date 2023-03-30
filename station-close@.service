@@ -1,5 +1,6 @@
 [Unit]
 Description=Close computer station for %i
+After=gdm.service
 
 [Service]
 Type=oneshot
