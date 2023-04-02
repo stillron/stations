@@ -1,10 +1,10 @@
 [Unit]
 Description= Run station close for %i
+After=gdm.service
 
 [Timer]
-OnCalendar=Mon..Thu 17:45
-OnCalendar=Fri..Sat 16:45
-Persistent=true
+OnCalendar=Mon..Thu 17:45..59:0/15
+OnCalendar=Fri..Sat 16:45..59:0/15
 AccuracySec=1s
 
 [Install]

@@ -2,17 +2,21 @@
 
 # Global Variables
 
+#Check for the existence of the /var/tmp/station folder, if it's not there, create it
+STATION_DIR="/var/tmp/station"
+test -d "$STATION_DIR" || mkdir -p "$STATION_DIR"
+
+#if the status file doesn't exist, create it and set the status to open
+STATUS_FILE="/var/tmp/station/status"
+test -f "$STATUS_FILE" || echo "unset" > "$STATUS_FILE"
+
+STATUS=$(cat "$STATUS_FILE")
+
 # Fuctions
 
 close() {
     # Logs the user out; locks the user's password; disabled autologin; enables banner message; reboots
     USER=$1
-
-    #if the status file doesn't exist, create it.
-    STATUS_FILE="/var/tmp/station/status"
-    test -f "$STATUS_FILE" || echo "open" >"$STATUS_FILE"
-
-    STATUS=$(cat "$STATUS_FILE")
 
     if [ $STATUS = "closed" ]; then
         echo "Station already closed"
@@ -26,8 +30,8 @@ close() {
         usermod -L $USER &&
             sed --in-place=.bak 's/^AutomaticLoginEnable = true/AutomaticLoginEnable = false/g' /etc/gdm3/custom.conf &&
             sed --in-place=.bak 's/^banner-message-enable=false/banner-message-enable=true/g' /etc/gdm3/greeter.dconf-defaults &&
-            echo "closed" > $STATUS_FILE
-            systemctl reboot
+            echo "closed" >$STATUS_FILE
+        systemctl reboot
         return 0
     fi
 }
@@ -36,11 +40,20 @@ open() {
     # Unlocks the users password; enables autologin; disables banner message; reboots
     USER=$1
 
-    usermod -U $USER &&
-        sed --in-place=.bak 's/^AutomaticLoginEnable = false/AutomaticLoginEnable = true/g' /etc/gdm3/custom.conf &&
-        sed --in-place=.bak 's/^banner-message-enable=true/banner-message-enable=false/g' /etc/gdm3/greeter.dconf-defaults &&
+    if [ $STATUS = "open" ]; then
+        echo "Station already open"
+        return 0
+
+    else
+
+        usermod -U $USER &&
+            sed --in-place=.bak 's/^AutomaticLoginEnable = false/AutomaticLoginEnable = true/g' /etc/gdm3/custom.conf &&
+            sed --in-place=.bak 's/^banner-message-enable=true/banner-message-enable=false/g' /etc/gdm3/greeter.dconf-defaults &&
+            echo "open" >$STATUS_FILE
         systemctl reboot
-    return 0
+        return 0
+
+    fi
 }
 
 function checkUser() {
