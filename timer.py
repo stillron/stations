@@ -4,15 +4,16 @@ gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk, GLib, Pango, Gdk
 import time
 import subprocess
+import signal
 
 class MainWindow(Gtk.Window):
     def __init__(self):
         super().__init__(title="Computer closing soon")
-        self.set_position(Gtk.WindowPosition.CENTER_ALWAYS)
         self.set_size_request(800, 100)
         self.set_border_width(10)
         self.set_resizable(False)
         self.set_keep_above(True)
+        self.move(1920,1080)
         self.connect("destroy", Gtk.main_quit)
 
         self.box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
@@ -77,7 +78,11 @@ class MainWindow(Gtk.Window):
             self.label.set_text("Event triggered!")
             return False
 
+def graceful_quit(signum, frame):
+    Gtk.main_quit()
+
 win = MainWindow()
 win.show_all()
 GLib.timeout_add(1000, win.update_timer)
+signal.signal(signal.SIGINT, graceful_quit)
 Gtk.main()
