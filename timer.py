@@ -1,4 +1,16 @@
 #!/usr/bin/env python3
+import os
+import fcntl
+import sys
+
+# Try to lock a file, exit if the lock is held
+lock_file = os.path.expanduser("~/.lock_file")
+try:
+    file_handle = open(lock_file, 'w')
+    fcntl.lockf(file_handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
+except IOError:
+    sys.exit(0)
+
 import gi
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk, GLib, Pango, Gdk
