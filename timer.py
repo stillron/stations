@@ -52,6 +52,7 @@ class MainWindow(Gtk.Window):
         css = b"""
         #my-label {
             font-size: 36pt;
+            font-family: mono;
         }
         #my-small-label {
             font-size: 14pt;
@@ -108,7 +109,7 @@ class MainWindow(Gtk.Window):
         if countdown > 0:
             remaining_time = time.strftime('%-M:%S', time.gmtime(countdown))
             self.label.set_text(
-                "Computer closing in: {}".format(remaining_time))
+                "Computer closing in {}".format(remaining_time))
             self.progress.set_fraction(self.seconds/self.startseconds)
             progress_percentage = int(self.seconds / self.startseconds * 100)
             self.progress.set_text("{}%".format(progress_percentage))
