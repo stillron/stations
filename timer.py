@@ -28,6 +28,7 @@ class MainWindow(Gtk.Window):
         self.set_border_width(10)
         self.set_resizable(False)
         self.set_keep_above(True)
+        self.set_type_hint(Gdk.WindowTypeHint.DIALOG)
         self.move(1920, 1080)
         self.connect("destroy", Gtk.main_quit)
 
