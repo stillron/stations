@@ -1,4 +1,10 @@
 #!/usr/bin/env python3
+import signal
+import subprocess
+import time
+import gi
+gi.require_version("Gtk", "3.0")
+from gi.repository import Gtk, GLib, Pango, Gdk
 import os
 import fcntl
 import sys
@@ -11,21 +17,16 @@ try:
 except IOError:
     sys.exit(0)
 
-import gi
-gi.require_version("Gtk", "3.0")
-from gi.repository import Gtk, GLib, Pango, Gdk
-import time
-import subprocess
-import signal
 
 class MainWindow(Gtk.Window):
-    def __init__(self):
+    def __init__(self, timer):
         super().__init__(title="Computer closing soon")
+        self.timer = timer
         self.set_size_request(800, 100)
         self.set_border_width(10)
         self.set_resizable(False)
         self.set_keep_above(True)
-        self.move(1920,1080)
+        self.move(1920, 1080)
         self.connect("destroy", Gtk.main_quit)
 
         self.box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
@@ -57,7 +58,7 @@ class MainWindow(Gtk.Window):
             self.css_provider,
             Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
         )
-        
+
         self.small_label = Gtk.Label()
         self.small_label.set_halign(Gtk.Align.CENTER)
         self.small_label.set_valign(Gtk.Align.CENTER)
@@ -66,35 +67,48 @@ class MainWindow(Gtk.Window):
         self.small_label.set_ellipsize(Pango.EllipsizeMode.END)
         self.box.pack_start(self.small_label, True, True, 0)
 
-        self.startseconds = -1;
+        self.startseconds = -1
         self.update_timer()
 
     def update_timer(self):
-        self.next_event = subprocess.check_output(['systemctl', 'show', '--property=NextElapseUSecRealtime', 'anacron.timer']).decode('utf-8').split('=')[1].strip()
+        self.next_event = subprocess.check_output(
+            ['systemctl', 'show', '--property=NextElapseUSecRealtime', self.timer]).decode('utf-8').split('=')[1].strip()
         if self.startseconds < 0:
-            self.startseconds = int(time.mktime(time.strptime(self.next_event, "%a %Y-%m-%d %H:%M:%S %Z"))) - int(time.time())
-        self.seconds = int(time.mktime(time.strptime(self.next_event, "%a %Y-%m-%d %H:%M:%S %Z"))) - int(time.time())
+            self.startseconds = int(time.mktime(time.strptime(
+                self.next_event, "%a %Y-%m-%d %H:%M:%S %Z"))) - int(time.time())
+        self.seconds = int(time.mktime(time.strptime(
+            self.next_event, "%a %Y-%m-%d %H:%M:%S %Z"))) - int(time.time())
         self.update_label(self.seconds)
         return True
 
     def update_label(self, countdown):
         if countdown > 0:
             remaining_time = time.strftime('%-M:%S', time.gmtime(countdown))
-            self.label.set_text("Computer closing in: {}".format(remaining_time))
+            self.label.set_text(
+                "Computer closing in: {}".format(remaining_time))
             self.progress.set_fraction(self.seconds/self.startseconds)
             progress_percentage = int(self.seconds / self.startseconds * 100)
             self.progress.set_text("{}%".format(progress_percentage))
-            self.small_label.set_markup("(Staff <b>cannot</b> stop this process)")
+            self.small_label.set_markup(
+                "(Staff <b>cannot</b> stop this process)")
             return True
         else:
             self.label.set_text("Event triggered!")
             return False
 
+
 def graceful_quit(signum, frame):
     Gtk.main_quit()
 
-win = MainWindow()
-win.show_all()
-GLib.timeout_add(1000, win.update_timer)
-signal.signal(signal.SIGINT, graceful_quit)
-Gtk.main()
+
+if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        print("Usage: python3 timer.py <timer_name>")
+        sys.exit(1)
+
+    timer_name = sys.argv[1]
+    win = MainWindow(timer_name)
+    win.show_all()
+    GLib.timeout_add(1000, win.update_timer)
+    signal.signal(signal.SIGINT, graceful_quit)
+    Gtk.main()
