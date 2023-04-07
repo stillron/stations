@@ -43,6 +43,8 @@ class MainWindow(Gtk.Window):
         self.box.pack_start(self.label, True, True, 0)
 
         self.progress = Gtk.ProgressBar(show_text=True)
+        self.progress.set_size_request(-1,30)
+        self.progress.set_name("my-progress")
         self.box.pack_start(self.progress, True, True, 0)
 
         self.css_provider = Gtk.CssProvider()
@@ -53,7 +55,15 @@ class MainWindow(Gtk.Window):
         #my-small-label {
             font-size: 14pt;
         }
+        #my-progress {
+            min-height: 20px;
+        }
+        #my-progress > trough > progress {
+            min-height: 20px;
+            border-radius: 10px;
+        }
         """
+
         self.css_provider.load_from_data(css)
         Gtk.StyleContext.add_provider_for_screen(
             Gdk.Screen.get_default(),
