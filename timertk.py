@@ -37,6 +37,8 @@ except IOError:
 root = tk.Tk()
 root.title("Computer closing soon")
 root.attributes('-type', 'utility')
+root.attributes("-topmost", True)
+root.resizable(False, False)
 root.geometry("800x150+{}+{}".format(int(root.winfo_screenwidth()), int(root.winfo_screenheight())))
 
 # create a label for the countdown
@@ -73,8 +75,6 @@ seconds = int(time.mktime(time.strptime(next_event, "%a %Y-%m-%d %H:%M:%S %Z")))
 
 # start the countdown
 update_label(seconds)
-
-root.resizable(False, False)
 
 try:
     # start the GUI loop
