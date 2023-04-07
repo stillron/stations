@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
-import signal
-import subprocess
 import time
+import subprocess
+import signal
 import gi
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk, GLib, Pango, Gdk
-import os
-import fcntl
 import sys
+import fcntl
+import os
+
+
 
 # Try to lock a file, exit if the lock is held
 lock_file = os.path.expanduser("~/.lock_file")
@@ -71,8 +73,18 @@ class MainWindow(Gtk.Window):
         self.update_timer()
 
     def update_timer(self):
-        self.next_event = subprocess.check_output(
-            ['systemctl', 'show', '--property=NextElapseUSecRealtime', self.timer]).decode('utf-8').split('=')[1].strip()
+        try:
+            output = subprocess.check_output(
+                ['systemctl', 'show', '--property=NextElapseUSecRealtime', self.timer]).decode('utf-8').strip()
+        except subprocess.CalledProcessError:
+            print(f"Timer '{self.timer}' doesn't exist.")
+            sys.exit(1)
+
+        if len(output) == len('NextElapseUSecRealtime='):
+            print(f"Timer '{self.timer}' has no next event.")
+            sys.exit(1)
+
+        self.next_event = output.split('=')[1].strip()
         if self.startseconds < 0:
             self.startseconds = int(time.mktime(time.strptime(
                 self.next_event, "%a %Y-%m-%d %H:%M:%S %Z"))) - int(time.time())
