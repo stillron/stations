@@ -23,12 +23,12 @@ except IOError:
 class MainWindow(Gtk.Window):
     def __init__(self, timer):
         super().__init__(title="Computer closing soon")
+        self.set_skip_taskbar_hint(True)
         self.timer = timer
         self.set_size_request(800, 100)
         self.set_border_width(10)
         self.set_resizable(False)
         self.set_keep_above(True)
-        self.set_type_hint(Gdk.WindowTypeHint.DIALOG)
         self.move(1920, 1080)
         self.connect("destroy", Gtk.main_quit)
 
@@ -59,7 +59,7 @@ class MainWindow(Gtk.Window):
         #my-progress {
             min-height: 20px;
         }
-        #my-progress > trough > progress {
+        #my-progress > trough, progress {
             min-height: 20px;
             border-radius: 10px;
         }
@@ -80,7 +80,7 @@ class MainWindow(Gtk.Window):
         self.small_label.set_ellipsize(Pango.EllipsizeMode.END)
         self.box.pack_start(self.small_label, True, True, 0)
 
-        self.startseconds = -1
+        self.startseconds = None
         self.update_timer()
 
     def update_timer(self):
@@ -96,7 +96,7 @@ class MainWindow(Gtk.Window):
             sys.exit(1)
 
         self.next_event = output.split('=')[1].strip()
-        if self.startseconds < 0:
+        if self.startseconds is None:
             self.startseconds = int(time.mktime(time.strptime(
                 self.next_event, "%a %Y-%m-%d %H:%M:%S %Z"))) - int(time.time())
         self.seconds = int(time.mktime(time.strptime(
@@ -114,7 +114,9 @@ class MainWindow(Gtk.Window):
             self.progress.set_text("{}%".format(progress_percentage))
             self.small_label.set_markup(
                 "(Staff <b>cannot</b> stop this process)")
+
             return True
+
         else:
             self.label.set_text("Event triggered!")
             return False
