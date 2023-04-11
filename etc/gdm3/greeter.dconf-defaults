@@ -31,7 +31,7 @@ disable-user-list=true
 # - Disable restart buttons
 # disable-restart-buttons=true
 # - Show a login welcome message
-banner-message-enable=true
+banner-message-enable=false
 banner-message-text='This station is now closed\n\nStaff cannot access this station.'
 
 # Automatic suspend
