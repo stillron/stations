@@ -78,7 +78,7 @@ function setup() {
     [[ -f $SYSTEMD_UNIT_FILES/station-open@.service ]] || READY_FLAG=1
     [[ -f $SYSTEMD_UNIT_FILES/station-open@.timer ]] || READY_FLAG=1
 
-    if [[ $READY_FLAG ]]; then
+    if [[ $READY_FLAG -eq 0 ]]; then
         echo "ready to go"
     else    
         echo "missing neccessary file"
