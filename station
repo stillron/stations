@@ -101,7 +101,7 @@ function teardown() {
     systemctl disable --now station-open@$1.timer
     systemctl disable --now station-notify@$1.timer
 
-    echo "All services disabled"
+    echo "All station services disabled"
 
 }
 
