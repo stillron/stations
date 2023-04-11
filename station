@@ -77,9 +77,17 @@ function setup() {
     [[ -f $SYSTEMD_UNIT_FILES/station-close@.timer ]] || READY_FLAG=1
     [[ -f $SYSTEMD_UNIT_FILES/station-open@.service ]] || READY_FLAG=1
     [[ -f $SYSTEMD_UNIT_FILES/station-open@.timer ]] || READY_FLAG=1
+    [[ -f $SYSTEMD_UNIT_FILES/station-notify@.service ]] || READY_FLAG=1
+    [[ -f $SYSTEMD_UNIT_FILES/station-notify@.timer ]] || READY_FLAG=1
+    [[ -f /usr/local/sbin/timer.py ]] || READY_FLAG=1
 
     if [[ $READY_FLAG -eq 0 ]]; then
         echo "ready to go"
+        
+        systemctl enable --now station-close@$1.timer
+        systemctl enable --now station-open@$1.timer
+        systemctl enable --now station-notify@$1.timer
+
     else    
         echo "missing neccessary file"
         exit 1
