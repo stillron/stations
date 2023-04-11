@@ -97,6 +97,12 @@ function setup() {
 
 function teardown() {
 
+    systemctl disable --now station-close@$1.timer
+    systemctl disable --now station-open@$1.timer
+    systemctl disable --now station-notify@$1.timer
+
+    echo "All services disabled"
+
 }
 
 #Determine which function the user passed in to the command
