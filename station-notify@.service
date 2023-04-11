@@ -5,7 +5,7 @@ Description=A notification window that the computer will soon close
 Type=simple
 User=%i
 Environment="DISPLAY=:0"
-ExecStart=/usr/local/sbin/timer.py station-close@%i.timer
+ExecStart=/usr/local/sbin/station-notify.py station-close@%i.timer
 Restart=no
 
 [Install]
