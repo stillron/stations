@@ -3,8 +3,8 @@ Description= Run station close for %i
 After=gdm.service
 
 [Timer]
-OnCalendar=Mon..Thu 11:25..34/1
-OnCalendar=Fri..Sat 15:50..59/1
+OnCalendar=Mon..Thu 17:50..59:0/15
+OnCalendar=Fri..Sat 16:50..59:0/15
 AccuracySec=1s
 
 [Install]
