@@ -88,6 +88,8 @@ function setup() {
         systemctl enable --now station-open@$1.timer
         systemctl enable --now station-notify@$1.timer
 
+        echo "All station services enabled"
+
     else    
         echo "missing neccessary file"
         exit 1
