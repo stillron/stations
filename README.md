@@ -4,10 +4,10 @@ A series of bash scripts and systemd services/timers that allow the public compu
 
 ## Usage
 
-`station close <user name>` closes the station loggin out the supplied user in the process.
-`station open <user name>` opens the station.
-`station setup <user name>` enables and starts all required systemd timers.  Do this when you're ready for the stations to begin closing themeselves.
-`station teardown <user name>` disables and stops all required systemd timers.  Do this when you'd like the stations to not close automatically.   
+* `station close <user name>` closes the station loggin out the supplied user in the process.
+* `station open <user name>` opens the station.
+* `station setup <user name>` enables and starts all required systemd timers.  Do this when you're ready for the stations to begin closing themeselves.
+* `station teardown <user name>` disables and stops all required systemd timers.  Do this when you'd like the stations to not close automatically.   
 
 ## Setting up timers
 
