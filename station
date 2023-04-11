@@ -95,6 +95,10 @@ function setup() {
 
 }
 
+function teardown() {
+
+}
+
 #Determine which function the user passed in to the command
 
 case "$1" in
@@ -108,6 +112,10 @@ open)
     exit
     ;;
 setup)
+    "$@"
+    exit
+    ;;
+teardown)
     "$@"
     exit
     ;;
