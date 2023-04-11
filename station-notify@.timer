@@ -6,7 +6,6 @@ After=gdm.service
 OnCalendar=Mon..Thu 11:25..34/1
 OnCalendar=Fri..Sat 15:50..59/1
 AccuracySec=1s
-Restart=no
 
 [Install]
 WantedBy=timers.target

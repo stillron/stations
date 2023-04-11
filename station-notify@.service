@@ -6,6 +6,7 @@ Type=simple
 User=%i
 Environment="DISPLAY=:0"
 ExecStart=/usr/local/sbin/timer.py station-close@%i.timer
+Restart=no
 
 [Install]
 WantedBy=multi-user.target
