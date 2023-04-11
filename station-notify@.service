@@ -1,0 +1,12 @@
+[Unit]
+Description=A notification window that the computer will soon close
+
+[Service]
+Type=simple
+User=%i
+Environment="DISPLAY=:0"
+ExecStart=/usr/local/sbin/timer.py station-close@public.timer
+
+[Install]
+WantedBy=multi-user.target
+

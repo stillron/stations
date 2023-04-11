@@ -1,0 +1,11 @@
+[Unit]
+Description= Run station close for %i
+After=gdm.service
+
+[Timer]
+OnCalendar=Mon..Thu 17:45..59:0/15
+OnCalendar=Fri..Sat 15:50..59/1
+AccuracySec=1s
+
+[Install]
+WantedBy=timers.target
