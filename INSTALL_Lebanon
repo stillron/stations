@@ -1,0 +1,9 @@
+#! /bin/bash
+
+install -v -m 0644 -o root -g root etc/gdm3/greeter.dconf-defaults -t /etc/gdm3/
+install -v -m 0644 -o root -g root etc/systemd/system/*.service -t /etc/systemd/system/
+install -v -m 0644 -o root -g root etc/systemd/system/station-close@.timer.lebanon /etc/systemd/system/station-close@.timer
+install -v -m 0644 -o root -g root etc/systemd/system/station-notify@.timer.lebanon /etc/systemd/system/station-notify@.timer
+install -v -m 0644 -o root -g root etc/systemd/system/station-open@.timer.lebanon /etc/systemd/system/station-open@.timer
+install -v -m 0700 -o root -g root usr/local/bin/station-notify.py /usr/local/bin/
+install -v -m 0700 -o root -g root usr/local/sbin/station /usr/local/sbin/
