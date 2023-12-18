@@ -1,4 +1,12 @@
-#! /bin/bash
+#!/bin/bash
+
+# check for root user
+if [[ $EUID -ne 0 ]]; then
+        echo "This installer must be run by user with admin privleges" 1>&2
+        exit 1
+fi
+
+# Install files
 
 install -v -m 0644 -o root -g root etc/gdm3/greeter.dconf-defaults -t /etc/gdm3/
 install -v -m 0644 -o root -g root etc/systemd/system/*.service -t /etc/systemd/system/
@@ -8,3 +16,6 @@ install -v -m 0644 -o root -g root etc/systemd/system/station-open@.timer.kilton
 install -v -m 0700 -o root -g root usr/local/bin/station-notify.py /usr/local/bin/
 install -v -m 0700 -o root -g root usr/local/sbin/station /usr/local/sbin/
 
+# Reload systemd daemon
+
+systemctl daemon-reload
