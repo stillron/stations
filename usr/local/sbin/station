@@ -4,6 +4,15 @@
 
 SYSTEMD_UNIT_FILES="/etc/systemd/system"
 
+# Debian default
+GDM_CUSTOM_FILE='/etc/gdm3/custom.conf'
+
+# Check if this is running on debian which has renamed their custom.conf file to daemon.conf
+if [[ -f /etc/gdm3/daemon.conf ]]; then
+    GDM_CUSTOM_FILE='/etc/gdm3/daemon.conf'
+fi
+
+
 #Check for the existence of the /var/tmp/station folder, if it's not there, create it
 STATION_DIR="/var/tmp/station"
 test -d "$STATION_DIR" || mkdir -p "$STATION_DIR"
@@ -30,7 +39,7 @@ close() {
             loginctl terminate-user $USER
         fi
         usermod -L $USER &&
-            sed --in-place=.bak 's/^AutomaticLoginEnable = true/AutomaticLoginEnable = false/g' /etc/gdm3/custom.conf &&
+            sed --in-place=.bak 's/^AutomaticLoginEnable = true/AutomaticLoginEnable = false/g' $GDM_CUSTOM_FILE &&
             sed --in-place=.bak 's/^banner-message-enable=false/banner-message-enable=true/g' /etc/gdm3/greeter.dconf-defaults &&
             echo "closed" >$STATUS_FILE
         systemctl reboot
@@ -49,7 +58,7 @@ open() {
     else
 
         usermod -U $USER &&
-            sed --in-place=.bak 's/^AutomaticLoginEnable = false/AutomaticLoginEnable = true/g' /etc/gdm3/custom.conf &&
+            sed --in-place=.bak 's/^AutomaticLoginEnable = false/AutomaticLoginEnable = true/g' $GDM_CUSTOM_FILE &&
             sed --in-place=.bak 's/^banner-message-enable=true/banner-message-enable=false/g' /etc/gdm3/greeter.dconf-defaults &&
             echo "open" >$STATUS_FILE
         systemctl reboot
