@@ -1,0 +1,6 @@
+[Unit]
+Description=User service to start station timer window
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/station-notify.py station-close@${USER}.timer

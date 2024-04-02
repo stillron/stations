@@ -1,13 +1,10 @@
 [Unit]
-Description=A notification window that the computer will soon close
+Description=Trigger a systemd user service to start station notify countdown gui
 
 [Service]
 Type=simple
-User=%i
-Environment="DISPLAY=:0"
-ExecStart=/usr/local/bin/station-notify.py station-close@%i.timer
+ExecStart=machinectl shell --uid=%i .host /usr/bin/systemctl --user start station-notify-user.service
 Restart=no
 
 [Install]
 WantedBy=multi-user.target
-
