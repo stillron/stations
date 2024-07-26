@@ -3,8 +3,7 @@ Description= Run station open for %i
 After=gdm.service
 
 [Timer]
-OnCalendar=Mon..Thu 20:30
-OnCalendar=Fri..Sat 17:30
+OnCalendar=Mon..Sat 9:00
 Persistent=true
 AccuracySec=1s
 
