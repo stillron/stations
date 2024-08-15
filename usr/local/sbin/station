@@ -58,6 +58,7 @@ open() {
     else
 
         usermod -U $USER &&
+            udevadm trigger && #assure monitors will wakeup
             sed --in-place=.bak 's/^AutomaticLoginEnable = false/AutomaticLoginEnable = true/g' $GDM_CUSTOM_FILE &&
             sed --in-place=.bak 's/^banner-message-enable=true/banner-message-enable=false/g' /etc/gdm3/greeter.dconf-defaults &&
             echo "open" >$STATUS_FILE
